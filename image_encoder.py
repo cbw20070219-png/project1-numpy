@@ -116,14 +116,16 @@ class ImageEncoder:
         patches = self.patchify(images)  # [B,49,3072]
 
         # TODO-05a: project patches to [B,49,768]. There is no patch bias.
-        raise NotImplementedError('TODO-05a: apply the supplied patch projection')
+        # Stored patch weights are [out,in] = [768,3072], so multiply by its T.
+        patch_tokens = patches @ self.patch_weight.T
 
         # Given: one supplied CLS row per image.
         cls = np.tile(self.cls, (images.shape[0], 1, 1))
 
         # TODO-05b: prepend CLS on the token axis, then add learned positions.
         # Return [B,50,768]. self.position broadcasts over B.
-        raise NotImplementedError('TODO-05b: CLS, patch rows and positions')
+        tokens = np.concatenate([cls, patch_tokens], axis=1)
+        return tokens + self.position
 
     def encode_tokens(self, images):
         """Provided assembly of token input and the 12 blocks; [B,50,768]."""
