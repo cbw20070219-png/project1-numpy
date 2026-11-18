@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Large supplied artefacts, not versioned (see weights/README.md)
+weights/*.npz
+assets/reference_outputs.npz
+
+# Generated at run time
+output_tokens.npz
+my_tokens.npz
