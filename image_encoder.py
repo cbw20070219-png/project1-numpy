@@ -89,6 +89,7 @@ class ImageEncoder:
                        for i in range(12)]
         self.post_norm = LayerNorm(weights['visual.ln_post.weight'], weights['visual.ln_post.bias'])
         self.projection = weights['visual.proj']  # [768,512], already [in,out]
+        self.patch_size = 32
 
     def patchify(self, images):
         """TODO-01. [B,3,224,224] -> [B,49,3072].
@@ -99,7 +100,17 @@ class ImageEncoder:
         """
         # TODO-01: separate patch-grid axes; reorder; flatten.
         # Input [B,3,224,224], return [B,49,3072].
-        raise NotImplementedError('TODO-01: turn each image into 49 patch rows')
+        batch, channels, height, width = images.shape
+        size = self.patch_size
+        rows, cols = height // size, width // size
+        # Step 1: cut each spatial axis into (grid index, offset inside patch).
+        # [B,C,H,W] -> [B,C,rows,size,cols,size]
+        grid = images.reshape(batch, channels, rows, size, cols, size)
+        # Step 2: put the patch grid first: [B,rows,cols,C,size,size]. Patch order
+        # is row-major (left to right, then top to bottom) and each patch keeps C,H,W.
+        grid = grid.transpose(0, 2, 4, 1, 3, 5)
+        # Step 3: one row of 3*32*32 numbers per patch.
+        return grid.reshape(batch, rows * cols, channels * size * size)
 
     def embed(self, images):
         patches = self.patchify(images)  # [B,49,3072]
