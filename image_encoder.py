@@ -153,6 +153,9 @@ class ImageEncoder:
         # Select CLS, apply post_norm, and project with self.projection.
         # [B,50,768] -> [B,768] -> [B,512]. visual.proj is already [in,out].
         # Name the projected array output. The final unit-vector helper is given.
-        raise NotImplementedError('TODO-06: CLS selection, post-Norm and projection')
+        cls = tokens[:, 0]                                    # [B,768]
+        # post_norm normalizes the feature axis, so give it a length-1 token axis.
+        normalized = self.post_norm(cls[:, None, :])[:, 0]    # [B,768]
+        output = normalized @ self.projection                 # [B,512]
 
         return unit_vector(output)
