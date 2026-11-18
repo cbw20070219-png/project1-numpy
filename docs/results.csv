@@ -1,0 +1,8 @@
+stage,shape,max_abs,mean_abs,atol,pass,seconds
+preprocess,10x3x224x224,0.000e+00,0.000e+00,2e-06,yes,0.000
+patches,2x49x3072,0.000e+00,0.000e+00,2e-04,yes,0.000
+tokens,2x50x768,4.005e-05,1.289e-06,2e-04,yes,0.000
+block0,2x50x768,7.063e-06,3.250e-07,2e-04,yes,0.000
+last_tokens,2x50x768,4.768e-05,2.696e-06,2e-04,yes,0.000
+output,10x512,5.439e-07,8.313e-08,2e-05,yes,3.528
+batch,3x512,4.619e-07,7.632e-08,2e-05,yes,1.098
