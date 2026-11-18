@@ -36,6 +36,7 @@ ViT-B/32 的图像塔前向计算：输入一批预处理后的图像，输出�
 | `config.json`、`weights/manifest.json` | 课程提供：结构与 152 个张量的指纹 |
 | `assets/` | 十张图像、`images.json` 来源信息、参考输出（不入库） |
 | `weights/` | 视觉权重（不入库，获取方法见 `weights/README.md`） |
+| `docs/` | 实验报告（DOCX/PDF）、三张结果图、`results.csv`、报告构建脚本 |
 | `practice/`、`lecture-demos/` | 课程练习 PDF 与课堂示例，原样保留 |
 
 数据流（以 B 张图为例）：
@@ -154,8 +155,9 @@ Transformer block 约 3.2–3.5 s，整批前向约 3.3 s（约 0.33 s/张）。
 
 ## 8. 提交与版本记录
 
-仓库保留了分步提交记录：先导入课程起始代码，再按 TODO-01 → TODO-06
-逐个实现并提交，最后补充 README、`evidence.py`、图表与报告。完整命令：
+仓库保留了分步提交记录：先导入课程起始代码，再按实现顺序（patchify →
+patch 投影与 CLS → 多头注意力 → 残差块 → 输出头）逐个提交，最后补充
+README、`evidence.py`、图表与报告。完整命令：
 
 ```bash
 git log --oneline --stat
