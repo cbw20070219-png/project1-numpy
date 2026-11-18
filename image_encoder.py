@@ -76,7 +76,8 @@ class TransformerBlock:
         update = self.attention(self.norm1(x), causal=causal)
 
         # TODO-04a: first residual addition. Name the result residual.
-        raise NotImplementedError('TODO-04a: add the attention update to x')
+        # The residual keeps the un-normalized x, not norm1(x).
+        residual = x + update
 
         # Given: the second Norm and the exact checkpoint activation helper.
         u = self.norm2(residual)
@@ -84,7 +85,10 @@ class TransformerBlock:
         # TODO-04b: MLP = GELU(u @ W1.T + b1) @ W2.T + b2.
         # hidden: [B,N,3072], mlp_update: [B,N,768] for the image tower.
         # Return residual + mlp_update. Both residual paths retain [B,N,D].
-        raise NotImplementedError('TODO-04b: MLP and the second residual')
+        hidden = u @ self.fc1_weight.T + self.fc1_bias
+        activated = self.gelu(hidden)
+        mlp_update = activated @ self.fc2_weight.T + self.fc2_bias
+        return residual + mlp_update
 
 
 class ImageEncoder:
