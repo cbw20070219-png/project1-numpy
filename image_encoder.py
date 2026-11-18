@@ -23,9 +23,13 @@ class MultiHeadAttention:
         In this image model D=768, H=12 and D/H=64. Use reshape/transpose.
         Research the head organization independently. Preserve token order.
         """
-        # TODO-02 contract: [B,N,D] to [B,H,N,D/H].
-        # Image model: D=768, H=12, D/H=64.
-        raise NotImplementedError('TODO-02: split the feature axis into heads')
+        # Contract: [B,N,D] -> [B,H,N,D/H].
+        # Step 1: read the feature axis as H head groups of D/H features.
+        batch, tokens, _ = x.shape
+        grouped = x.reshape(batch, tokens, self.heads, self.head_dim)
+        # Step 2: move the head axis in front of the token axis, so each head
+        # owns its own N x D/H score table. Token order inside a head is kept.
+        return grouped.transpose(0, 2, 1, 3)
 
     def __call__(self, x, causal=False):
         # Given: stored linear weights use [out,in]. Parameters stay fixed.
